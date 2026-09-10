@@ -1,0 +1,40 @@
+import asyncio
+import logging
+from aiogram import Bot, Dispatcher, types
+from aiogram.filters import Command, CommandStart
+
+# ВСТАВЬ СВОЙ ТОКЕН НИЖЕ В КОВЫЧКАХ
+TOKEN = "8954286996:AAEsgjQhroy01Qa_5WRtyvoyXkHekdaPoy8"
+
+logging.basicConfig(level=logging.INFO)
+bot = Bot(token=TOKEN)
+dp = Dispatcher()
+
+
+# Доступно ВСЕМ без проверок ID
+@dp.message(CommandStart())
+async def cmd_start(message: types.Message):
+    await message.answer(
+        "Привет! Бот готов к работе. Отправляй любые сообщения!"
+    )
+
+
+@dp.message(Command("help"))
+async def cmd_help(message: types.Message):
+    await message.answer(
+        "Инструкция:\n• Бот работает без регистрации.\n• Просто пиши текст!"
+    )
+
+
+@dp.message()
+async def echo_message(message: types.Message):
+    await message.answer(f"Вы написали: {message.text}")
+
+
+async def main():
+    await bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(bot)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
